@@ -1,0 +1,47 @@
+name: Mutation Testing — Stryker + Jest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Testes + Cobertura + Mutation Score
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Testes unitários
+        run: npm test
+
+      - name: Cobertura (gate de 100%)
+        run: npm run test:coverage
+
+      - name: Mutation testing (suíte forte — gate de 95%)
+        run: npm run test:mutation:solution
+
+      - name: Publicar relatório de mutação (artefato HTML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: reports/
+          retention-days: 14

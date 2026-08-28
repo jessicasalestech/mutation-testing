@@ -1,0 +1,23 @@
+{
+  "name": "mutation-testing-graos",
+  "version": "1.0.0",
+  "description": "Portfólio QA — Mutation Testing com Stryker + Jest. Demonstra que cobertura de código ≠ qualidade de teste, aplicado a regras de negócio de taxa de serviço no recebimento de grãos.",
+  "author": "Jessica Sales",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:mutation": "stryker run",
+    "test:mutation:solution": "cross-env SOLUTION=1 stryker run"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "^8.7.0",
+    "@stryker-mutator/jest-runner": "^8.7.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0"
+  }
+}
