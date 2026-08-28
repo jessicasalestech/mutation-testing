@@ -1,93 +1,93 @@
 # 🧬 Mutation Testing — Stryker + Jest
 
-Projeto de **portfólio de QA** que demonstra **mutation testing**: a técnica que prova a
-**força** dos testes, não apenas se eles rodam.
+A **QA portfolio project** demonstrating **mutation testing**: the technique that proves the
+**strength** of your tests, not just that they run.
 
-> **Pré-requisito mental:** cobertura de código responde *"essa linha foi executada?"*
-> Mutation testing responde *"se essa linha mudasse, meus testes perceberiam?"*
+> **Mental prerequisite:** code coverage answers *"was this line executed?"*
+> Mutation testing answers *"if this line changed, would my tests notice?"*
 
-## 🎯 O problema que resolve
+## 🎯 The problem it solves
 
-Dois módulos têm **100% de cobertura** (linhas, branches, statements e funções).
-Apenas um realmente verifica o comportamento nas **fronteiras** das regras de negócio.
-O mutation testing é o que diz a diferença.
+Two modules have **100% coverage** (lines, branches, statements and functions).
+Only one actually verifies behaviour at the **boundaries** of the business rules.
+Mutation testing is what tells them apart.
 
-| Módulo | Cobertura | Mutation score (suíte fraca) |
+| Module | Coverage | Mutation score (weak suite) |
 |---|---|---|
-| [`src/leapYear.js`](src/leapYear.js) | 100% | **100%** (forte mesmo no modo padrão) |
-| [`src/taxaServico.js`](src/taxaServico.js) | 100% | **86% — 5 mutantes sobrevivem** 🚨 |
+| [`src/leapYear.js`](src/leapYear.js) | 100% | **100%** (strong even in default mode) |
+| [`src/taxaServico.js`](src/taxaServico.js) | 100% | **86% — 5 mutants survive** 🚨 |
 
 ## ⚙️ Stack
 
-- **Jest** para os testes unitários
-- **Stryker** (via `@stryker-mutator/jest-runner`) para mutation testing
-- **Quality gate** configurado em [`stryker.config.json`](stryker.config.json) (`thresholds.break: 95`)
+- **Jest** for unit tests
+- **Stryker** (via `@stryker-mutator/jest-runner`) for mutation testing
+- **Quality gate** configured in [`stryker.config.json`](stryker.config.json) (`thresholds.break: 95`)
 
-## 🚀 Como rodar
+## 🚀 How to run
 
 ```bash
 npm install
 
-npm test                           # 10 testes, todos passam
-npm run test:coverage              # 100% de cobertura nos dois módulos
+npm test                           # 10 tests, all pass
+npm run test:coverage              # 100% coverage on both modules
 
 # ---- Mutation testing ----
-npm run test:mutation              # suíte FRACA  -> score ~90%, FALHA o gate (exit 1)
-npm run test:mutation:solution     # suíte FORTE  -> score 100%, PASSA (exit 0)
+npm run test:mutation              # WEAK suite  -> ~90% score, FAILS the gate (exit 1)
+npm run test:mutation:solution     # STRONG suite -> 100% score, PASSES (exit 0)
 ```
 
-O relatório HTML fica em `reports/mutation/mutation.html`.
+The HTML report is written to `reports/mutation/mutation.html`.
 
-## 🧠 O que é um mutante?
+## 🧠 What is a mutant?
 
-O Stryker faz uma pequena mudança no código de produção (o *mutante*) e re-executa os testes:
+Stryker makes a small change to the production code (a *mutant*) and re-runs the tests:
 
-- **os testes falham** → o mutante foi **morto** ✅ (seu teste detectou a mudança)
-- **os testes passam** → o mutante **sobreviveu** ❌ (aquela linha é executada, mas não verificada)
+- **tests fail** → the mutant has been **killed** ✅ (your test noticed the change)
+- **tests pass** → the mutant **survived** ❌ (that line is executed, but not verified)
 
 ```
-mutation score = mutantes mortos / total de mutantes
+mutation score = killed mutants / total mutants
 ```
 
-## 🐛 Por que 5 mutantes sobrevivem na suíte fraca?
+## 🐛 Why do 5 mutants survive in the weak suite?
 
-A suíte fraca cobre todas as linhas, mas **não testa as fronteiras** nem as mensagens de erro:
+The weak suite covers every line, but **doesn't test the boundaries** or the error messages:
 
-| Mutante sobrevivente | Por que sobrevive |
+| Surviving mutant | Why it survives |
 | --- | --- |
-| `valor <= 1000` → `valor < 1000` | o valor exato **1000** nunca é testado |
-| `valor < 0` → `valor <= 0` | o valor **0** nunca é testado |
-| `typeof valor !== 'number'` → `false` | nenhum teste passa um valor **não numérico** |
-| `'valor deve ser...'` → `''` | o teste só valida `toThrow(RangeError)`, **não a mensagem** |
-| `'tipo de grão desconhecido'` → `''` | idem, mensagem não validada |
+| `valor <= 1000` → `valor < 1000` | the exact value **1000** is never tested |
+| `valor < 0` → `valor <= 0` | the value **0** is never tested |
+| `typeof valor !== 'number'` → `false` | no test passes a **non-numeric** value |
+| `'valor deve ser...'` → `''` | the test only checks `toThrow(RangeError)`, **not the message** |
+| `'tipo de grão desconhecido'` → `''` | same — message not validated |
 
-Todas são **bugs off-by-one em regras de negócio** — exatamente o tipo de defeito que
-chega em produção com um badge de cobertura verde. 🔥
+They're all **off-by-one bugs in business rules** — exactly the kind of defect that reaches
+production with a green coverage badge. 🔥
 
-## 💪 A solução
+## 💪 The solution
 
-[`src/taxaServico.solution.test.js`](src/taxaServico.solution.test.js) adiciona os testes
-de fronteira (valor 0, valor 1000, valor não numérico e mensagens exatas) que **matam**
-todos os mutantes. Ele fica **fora do modo padrão** e entra com `SOLUTION=1`, para você
-ver o "antes" e o "depois" lado a lado (ver [`jest.config.js`](jest.config.js)).
+[`src/taxaServico.solution.test.js`](src/taxaServico.solution.test.js) adds the boundary
+tests (value 0, value 1000, non-numeric value and exact messages) that **kill** every
+mutant. It stays **out of default mode** and comes in with `SOLUTION=1`, so you can see the
+"before" and "after" side by side (see [`jest.config.js`](jest.config.js)).
 
-## 💬 Papo de entrevista
+## 💬 Interview talking points
 
-- **Cobertura ≠ qualidade**: cobrir linha não garante que o comportamento está verificado.
-- **Mutantes sobreviventes são acionáveis**: cada um é um caso de teste faltando, uma
-  asserção fraca, ou código morto que dá pra deletar.
-- **Mutantes equivalentes**: a falsa crítica — uma mutação que não altera comportamento
-  observável (ex.: um log), que nenhum teste consegue matar. Por isso 100% nem sempre é
-  o alvo; o Stryker tem `thresholds` e `// Stryker disable` para isso.
-- **Custo**: a suíte roda uma vez por mutante. Usamos `coverageAnalysis: "perTest"` para
-  rodar apenas os testes que cobrem a linha mutada.
+- **Coverage ≠ quality**: covering a line doesn't mean the behaviour is verified.
+- **Surviving mutants are actionable**: each one is a missing test case, a weak assertion,
+  or dead code you can delete.
+- **Equivalent mutants**: the known false positive — a mutation that cannot change
+  observable behaviour (e.g. mutating a pure logging call), so no test can kill it. That's
+  why 100% isn't always the goal; Stryker has `thresholds` and `// Stryker disable` for this.
+- **Cost**: the suite runs once per mutant. We use `coverageAnalysis: "perTest"` to run only
+  the tests covering the mutated line.
 
-## 📍 Onde vale a pena
+## 📍 Where it pays off
 
-Regras de negócio, pricing, validação, permissões e lógica densa em fronteiras. Menos
-valor em código de "cola"/I/O. Neste projeto, a **taxa de serviço do recebimento de grãos**
-ilustra uma regra de negócio real com limites claros.
+Business rules, pricing, validation, permissions and logic dense in boundaries. Less value
+in "glue"/I/O code. In this project, the **grain service fee** (recebimento de grãos)
+illustrates a real business rule with clear limits.
 
 ---
 
-**Autoria:** Jessica Sales · QA
+**Author:** Jessica Sales · QA
