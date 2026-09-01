@@ -1,33 +1,33 @@
-const { calcularTaxaServico } = require('./taxaServico');
+const { calculateServiceFee } = require('./taxaServico');
 
 /**
- * Suíte "forte" (solução): fecha os buracos deixados pela suíte fraca.
- * - testa os LIMITES exatos (0 e 1000) das regras de negócio;
- * - valida as MENSAGENS exatas de erro.
- * Estes testes matam as mutações sobreviventes. Rodam apenas com SOLUTION=1.
+ * "Strong" suite (solution): closes the gaps left by the weak suite.
+ * - tests the exact BOUNDARIES (0 and 1000) of the business rules;
+ * - validates the exact ERROR messages.
+ * These tests kill the surviving mutants. They only run with SOLUTION=1.
  */
-describe('calcularTaxaServico — fronteiras', () => {
-  it('considera o valor 0 como válido e isento', () => {
-    expect(calcularTaxaServico('soja', 0)).toBe(0);
+describe('calculateServiceFee — boundaries', () => {
+  it('treats value 0 as valid and exempt', () => {
+    expect(calculateServiceFee('soja', 0)).toBe(0);
   });
 
-  it('rejeita valor não numérico', () => {
-    expect(() => calcularTaxaServico('soja', '5000')).toThrow(RangeError);
+  it('rejects a non-numeric value', () => {
+    expect(() => calculateServiceFee('soja', '5000')).toThrow(RangeError);
   });
 
-  it('considera exatamente R$ 1.000 isento', () => {
-    expect(calcularTaxaServico('milho', 1000)).toBe(0);
+  it('treats exactly BRL 1,000 as exempt', () => {
+    expect(calculateServiceFee('milho', 1000)).toBe(0);
   });
 
-  it('cobra a partir de valores acima de R$ 1.000', () => {
-    expect(calcularTaxaServico('milho', 3000)).toBe(45); // 3000 * 1,5%
+  it('charges for values above BRL 1,000', () => {
+    expect(calculateServiceFee('milho', 3000)).toBe(45); // 3000 * 1.5%
   });
 
-  it('valida a mensagem exata do RangeError', () => {
-    expect(() => calcularTaxaServico('soja', -1)).toThrow('valor deve ser um número não-negativo');
+  it('validates the exact RangeError message', () => {
+    expect(() => calculateServiceFee('soja', -1)).toThrow('value must be a non-negative number');
   });
 
-  it('valida a mensagem exata do tipo desconhecido', () => {
-    expect(() => calcularTaxaServico('baga', 5000)).toThrow('tipo de grão desconhecido');
+  it('validates the exact unknown-type message', () => {
+    expect(() => calculateServiceFee('baga', 5000)).toThrow('unknown grain type');
   });
 });

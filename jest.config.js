@@ -4,8 +4,8 @@ module.exports = {
   coverageThreshold: {
     global: { lines: 100, statements: 100, functions: 100, branches: 100 },
   },
-  // Por padrão roda apenas a suíte "fraca" (não inclui *.solution.test.js).
-  // Com SOLUTION=1 inclui a solução e a suíte passa a ser "forte".
+  // By default it runs only the "weak" suite (does not include *.solution.test.js).
+  // With SOLUTION=1 the solution is included and the suite becomes "strong".
   testMatch:
     process.env.SOLUTION === '1'
       ? ['**/*.test.js']

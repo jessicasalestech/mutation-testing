@@ -1,7 +1,7 @@
 {
   "name": "mutation-testing-graos",
   "version": "1.0.0",
-  "description": "Portfólio QA — Mutation Testing com Stryker + Jest. Demonstra que cobertura de código ≠ qualidade de teste, aplicado a regras de negócio de taxa de serviço no recebimento de grãos.",
+  "description": "QA Portfolio — Mutation Testing with Stryker + Jest. Demonstrates that code coverage ≠ test quality, applied to service fee business rules for grain reception.",
   "author": "Jessica Sales",
   "license": "MIT",
   "private": true,

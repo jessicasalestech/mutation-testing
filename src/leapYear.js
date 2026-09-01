@@ -1,13 +1,13 @@
 /**
- * Informa se um ano é bissexto segundo a regra gregoriana:
- * divisível por 4, exceto séculos (divisíveis por 100), que só são bissextos
- * se também divisíveis por 400.
+ * Tells whether a year is a leap year according to the Gregorian rule:
+ * divisible by 4, except centuries (divisible by 100), which are only leap
+ * if also divisible by 400.
  *
- * @param {number} ano
+ * @param {number} year
  * @returns {boolean}
  */
-function ehBissexto(ano) {
-  return ano % 400 === 0 || (ano % 4 === 0 && ano % 100 !== 0);
+function isLeapYear(year) {
+  return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
 }
 
-module.exports = { ehBissexto };
+module.exports = { isLeapYear };

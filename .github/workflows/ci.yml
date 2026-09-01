@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   quality:
-    name: Testes + Cobertura + Mutation Score
+    name: Tests + Coverage + Mutation Score
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -29,16 +29,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Testes unitários
+      - name: Unit tests
         run: npm test
 
-      - name: Cobertura (gate de 100%)
+      - name: Coverage (100% gate)
         run: npm run test:coverage
 
-      - name: Mutation testing (suíte forte — gate de 95%)
+      - name: Mutation testing (strong suite — 95% gate)
         run: npm run test:mutation:solution
 
-      - name: Publicar relatório de mutação (artefato HTML)
+      - name: Publish mutation report (HTML artifact)
         if: always()
         uses: actions/upload-artifact@v7
         with:
