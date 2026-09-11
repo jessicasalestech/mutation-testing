@@ -1,5 +1,7 @@
 # 🧬 Mutation Testing — Stryker + Jest
 
+[![English](https://img.shields.io/badge/English-blue?style=plastic&logo=openbadges&logoColor=white)](README.md) [![Português](https://img.shields.io/badge/Portugu%C3%AAs-green?style=plastic&logo=openbadges&logoColor=white)](README-pt-BR.md)
+
 A **QA portfolio project** demonstrating **mutation testing**: the technique that proves the
 **strength** of your tests, not just that they run.
 
